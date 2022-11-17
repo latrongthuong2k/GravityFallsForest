@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Longblock
   - ShortBlock
+  - Obstacle
   layers:
   - Default
   - TransparentFX
