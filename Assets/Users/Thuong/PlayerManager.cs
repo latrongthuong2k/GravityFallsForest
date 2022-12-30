@@ -7,26 +7,28 @@ using UnityEngine.SceneManagement;
 public class PlayerManager : MonoBehaviour 
 {
     GameObject Player;
-    bool checkBool;
     private AsyncOperation asyncOperation;
-
+    private int SceneIndex;
     [SerializeField] private Text uiText;
 
-    private int remainingDuration = 100;
+    private int remainingDuration = 90;
 
     private bool Pause;
     private void Start()
     {
         StartCoroutine(UpdateTimer());
         Player = GameObject.FindGameObjectWithTag("Player");
-        checkBool = false;
     }
     private void FixedUpdate()
     {
-        if (Player == null && checkBool == false)
+        if (Player == null || remainingDuration == 0)
         {
-            checkBool = true;
-            StartCoroutine("LoadGame");
+            SceneIndex = 4;
+            StartCoroutine(LoadScene(SceneIndex)); // game overScene
+        }
+        if(Input.GetKeyDown(KeyCode.A) ||  Movement.Instance.isClear == true)
+        {
+            StartCoroutine(LoadScene(SceneIndex = 3)); // clearScene
         }
     }
 
@@ -35,10 +37,10 @@ public class PlayerManager : MonoBehaviour
     //    remainingDuration = Second;
     //    StartCoroutine(UpdateTimer(Second));
     //}
-    IEnumerator LoadGame()
+    IEnumerator LoadScene(int index)
     {
-        asyncOperation = SceneManager.LoadSceneAsync(3);
-        yield return asyncOperation;
+        asyncOperation = SceneManager.LoadSceneAsync(index);
+        yield return null;
     }
 
         private IEnumerator UpdateTimer()
@@ -47,7 +49,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (!Pause)
             {
-                uiText.text = remainingDuration.ToString(); //$"{remainingDuration / 60:00}:{remainingDuration % 60:00}";
+                uiText.text = "Time left : " + remainingDuration.ToString("F1"); //$"{remainingDuration / 60:00}:{remainingDuration % 60:00}";
                 //uiFill.fillAmount = Mathf.InverseLerp(0, setTime, remainingDuration);
                 remainingDuration--;
                 yield return new WaitForSeconds(1f);

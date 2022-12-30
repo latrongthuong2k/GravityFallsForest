@@ -51,9 +51,3 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 3baf61c6e45ed4fbe8e8c7fc063845f3, type: 3}
     loop: 1
     source: {fileID: 0}
-  - soundName: SE
-    volume: 1
-    pitch: 1.61
-    clip: {fileID: 8300000, guid: c8bc6ce95d7874111928a8bd15606061, type: 3}
-    loop: 1
-    source: {fileID: 0}

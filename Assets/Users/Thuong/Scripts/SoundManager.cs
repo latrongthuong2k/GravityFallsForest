@@ -21,14 +21,22 @@ public class Sound
     [HideInInspector]
     public AudioSource source;
     //
-    public void Init()
+    void Init()
     {
-        
+        soundName = "";
+        volume = 1f;
+        pitch = 0.5f;
+        clip = null;
+        loop = false;
     }
 }
+/// <summary>
+/// 
+/// </summary>
+
 public class SoundManager : MonoBehaviour
-{ 
-    public Sound[] Sounds;
+{
+    public List<Sound> Sounds;
 
     void Awake()
     {
@@ -42,10 +50,46 @@ public class SoundManager : MonoBehaviour
         //    return;
         //}
         DontDestroyOnLoad(gameObject);
+        
+    }
+
+    private void Start()
+    {
+        SetSoundVol();
+        PlayAnySound("BGM");
+    }
+
+    private void Update()
+    {
+    }
+    public void PlayAnySound(string name)
+    {
+        Sound s = Sounds.Find(sound => sound.soundName == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound " + name + " Not found!");
+            return;
+        }
+           
+        s.source.Play();
+    }
+    public void StopBGM(string name)
+    {
+        Sound s = Sounds.Find(sound => sound.soundName == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound " + name + " Not found!");
+            return;
+        }
+
+        s.source.Stop();
+    }
+    void SetSoundVol()
+    {
         foreach (Sound s in Sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
-            if(s.clip == null)
+            if (s.clip == null)
             {
                 Debug.LogWarning("don't have any sound in list sounds ! ");
                 return;
@@ -58,30 +102,5 @@ public class SoundManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
-    }
-
-    private void Start()
-    {
-       PlayAnySound("BGM");
-    }
-
-    private void Update()
-    {
-        
-    }
-    public void PlayAnySound(string name)
-    {
-        Sound s = Array.Find(Sounds, sound => sound.soundName == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Sound " + name + " Not found!");
-            return;
-        }
-           
-        s.source.Play();
-    }
-    public void StopBGM()
-    {
-
     }
 }

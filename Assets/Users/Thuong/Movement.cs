@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -9,29 +10,35 @@ public enum Gravity { Upright = 1, Upsidedown = -1 };
 
 public class Movement : MonoBehaviour
 {
+    private static Movement instance;
+    public static Movement Instance => instance;
+
     public Speeds CurrentSpeed;
     public Gamemodes CurrentGamemode;
+
+    public bool isClear = false;
     public float force = 26.6581f;
     //                     -1  0   1   2    3    4
-    float[] SpeedValues = {3, 9f, 10f, 13f, 15f, 17f };
+    float[] SpeedValues = {3, 9f, 10f, 15f, 25f };
 
     [SerializeField]private Transform GroundCheckTransform;
     [SerializeField]private Transform TopCheckTransForm;
-    public float GroundCheckRadius;
-    public LayerMask GroundMask;
     [SerializeField]private Transform Sprite;
+    public LayerMask GroundMask;
+    public float GroundCheckRadius;
     private float ResetSpeedTimer = 3f;
     private bool resetBool;
-    SoundManager soundManager;
     Rigidbody2D rb;
-    public AudioSource _audio;
 
+    [SerializeField] AudioSource JumpSound;
     void Start()
     {
-        _audio.GetComponent<AudioSource>();
+        instance = this;
+        JumpSound = GetComponent<AudioSource>();
         ResetSpeedTimer = 3f;
         resetBool = false;
         rb = GetComponent<Rigidbody2D>();
+        CurrentSpeed = MainMenu.Instance.CurrentSpeed;
     }
 
     void Update()
@@ -49,9 +56,9 @@ public class Movement : MonoBehaviour
             Vector3 Rotation = Sprite.rotation.eulerAngles;
             Rotation.z = Mathf.Round(Rotation.z / 90) * 90;
             Sprite.rotation = Quaternion.Euler(Rotation);
-            if (Input.GetMouseButton(0))
+            if (Input.GetKey(KeyCode.Space))
             {
-                _audio.Play();
+                JumpSound.Play();
                 rb.velocity = Vector2.zero;
                 rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
                 return;
@@ -72,9 +79,9 @@ public class Movement : MonoBehaviour
             Vector3 Rotation = Sprite.rotation.eulerAngles;
             Rotation.z = Mathf.Round(Rotation.z / 90) * 90;
             Sprite.rotation = Quaternion.Euler(Rotation);
-            if (Input.GetMouseButton(0))
+            if (Input.GetKey(KeyCode.Space))
             {
-                _audio.Play();
+                JumpSound.Play();
                 rb.velocity = Vector2.zero;
                 rb.AddForce(Vector2.down * force, ForceMode2D.Impulse);
                 return;
@@ -112,18 +119,22 @@ public class Movement : MonoBehaviour
                 break;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Longblock")
+        if (collision.tag == "Longblock")
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
-        else if(collision.collider.tag == "ShortBlock")
+        else if(collision.tag == "ShortBlock")
         {
             CurrentSpeed = Speeds.SuperLow;
             resetBool = true;
+        }else if(collision.tag == "Goald")
+        {
+            isClear = true;
         }
     }
+    
     private void Timer()
     {
        
