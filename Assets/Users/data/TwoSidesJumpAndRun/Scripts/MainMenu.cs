@@ -7,14 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    private static MainMenu instance;
+    public static MainMenu Instance => instance;
     public Text bestScoreInfo;
     public Slider volumeSlider;
     public Button playButton, quitButton;
     public Button[] ModeButton;
     public AudioClip clickSFX;
-     int gameSceneIndex = 1;
+    int gameSceneIndex = 1;
     public Image loadingImage;
-
+    public Speeds CurrentSpeed;
     public static int modeNum;
 
     private int bestScore;
@@ -56,7 +58,7 @@ public class MainMenu : MonoBehaviour
 
         AudioListener.volume = volumeSlider.value;
     }
-    
+
     void CaseScene() // play Button
     {
         switch (sceneName)
@@ -95,7 +97,7 @@ public class MainMenu : MonoBehaviour
     }
     void addListenerButton()
     {
-       
+
     }
     IEnumerator LoadGame()
     {

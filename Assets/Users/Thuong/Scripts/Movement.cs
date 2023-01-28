@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public enum Speeds {SuperLow = 0, Slow = 1, Normal = 2, Fast = 3, Faster = 4, Fastest = 5 };
+public enum Speeds { SuperLow = 0, Slow = 1, Normal = 2, Fast = 3, Faster = 4, Fastest = 5 };
 public enum Gamemodes { Cube = 0, Ship = 1 };
 public enum Gravity { Upright = 1, Upsidedown = -1 };
 
@@ -19,11 +19,11 @@ public class Movement : MonoBehaviour
     public bool isClear = false;
     public float force = 26.6581f;
     //                     -1  0   1   2    3    4
-    float[] SpeedValues = {3, 9f, 10f, 15f, 25f };
+    float[] SpeedValues = { 3, 9f, 10f, 15f, 25f };
 
-    [SerializeField]private Transform GroundCheckTransform;
-    [SerializeField]private Transform TopCheckTransForm;
-    [SerializeField]private Transform Sprite;
+    [SerializeField] private Transform GroundCheckTransform;
+    [SerializeField] private Transform TopCheckTransForm;
+    [SerializeField] private Transform Sprite;
     public LayerMask GroundMask;
     public float GroundCheckRadius;
     private float ResetSpeedTimer = 3f;
@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour
         ResetSpeedTimer = 3f;
         resetBool = false;
         rb = GetComponent<Rigidbody2D>();
-        CurrentSpeed = MainMenu.Instance.CurrentSpeed;
+        //CurrentSpeed = MainMenu.Instance.CurrentSpeed;
     }
 
     void Update()
@@ -50,7 +50,7 @@ public class Movement : MonoBehaviour
             ResetSpeedTimer -= Time.deltaTime;
         }
         Timer();
-        
+
         if (OnGround())
         {
             Vector3 Rotation = Sprite.rotation.eulerAngles;
@@ -72,7 +72,7 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            Sprite.Rotate(Vector3.back *2);
+            Sprite.Rotate(Vector3.back * 2);
         }
         if (OnTopGround())
         {
@@ -125,19 +125,20 @@ public class Movement : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        else if(collision.tag == "ShortBlock")
+        else if (collision.tag == "ShortBlock")
         {
             CurrentSpeed = Speeds.SuperLow;
             resetBool = true;
-        }else if(collision.tag == "Goald")
+        }
+        else if (collision.tag == "Goald")
         {
             isClear = true;
         }
     }
-    
+
     private void Timer()
     {
-       
+
         if (ResetSpeedTimer <= 0)
         {
             ResetSpeedTimer = 3f;
